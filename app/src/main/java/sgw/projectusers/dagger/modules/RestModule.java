@@ -21,13 +21,6 @@ public class RestModule {
         return retrofit.create(RestAPI.class);
     }
 
-    /**
-     *
-     * @param client uses for create the HTTP query
-     * @param baseUrl, like 'http://api.github.com/'
-     * @param factory, uses for asynchronous queries to service with RxJava
-     * @return Retrofit object, that provides API object, that will make requests
-     */
     @Provides
     public Retrofit getRetrofit(OkHttpClient client, String baseUrl, CallAdapter.Factory factory) {
         return new Retrofit.Builder()
@@ -45,6 +38,7 @@ public class RestModule {
 
     @Provides
     public static String getBaseUrl() {
-        return "https://api.github.com/users";
+        return "https://api.github.com";
     }
+
 }

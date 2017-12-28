@@ -1,21 +1,20 @@
 package sgw.projectusers.model.rest;
 
-import io.reactivex.Observable;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Path;
-import sgw.projectusers.model.entities.Users;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Катя on 27.12.2017.
- */
+import io.reactivex.Flowable;
+import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+import sgw.projectusers.model.entities.User;
+
 
 public interface RestAPI {
 
-
     @GET("/users")
-    Observable<Users> getUsers(@Header("rel") String rel,
-            @Path("since") String since);
+    Flowable<Response<List<User>>> getUser(@Query("since") int since, @Query("per_page") int perPage);
 
-    }
+
+}
 
