@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity  {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         usersList = new ArrayList<>();
-        mAdapter = new RecyclerAdapter(usersList,this);
+        mAdapter = new RecyclerAdapter(new UserClickListener(),usersList,this);
         recyclerView.setAdapter(mAdapter);
 
         final LinearLayoutManager layoutManager = (LinearLayoutManager) mLayoutManager;
@@ -143,5 +143,12 @@ public class MainActivity extends BaseActivity  {
         compositeDisposable.dispose();
     }
 
+    public class UserClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
 
 }

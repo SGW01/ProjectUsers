@@ -30,10 +30,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private ArrayList<User> users;
     Context context;
+    private final View.OnClickListener mOnClickListener;
 
 
-    public RecyclerAdapter(ArrayList<User> users, Context context) {
+    public RecyclerAdapter(View.OnClickListener onClickListener, ArrayList<User> users, Context context) {
 
+        mOnClickListener=onClickListener;
         this.users = users;
         this.context = context;
     }
@@ -58,6 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         User user = users.get(position);
         userViewHolder.userName.setText(user.getLogin());
         userViewHolder.loginId.setText(String.valueOf(user.getUrl()));
+        userViewHolder.setAvatarOnClickListener(mOnClickListener);
         if (!TextUtils.isEmpty(user.getAvatar_url())) {
             Glide.with(context)
                     .load(user.getAvatar_url())
@@ -85,6 +88,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
+
     public static class UserViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_user_login)
@@ -97,6 +101,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public UserViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void setAvatarOnClickListener(View.OnClickListener onClickListener)
+        {
+            avatar.setOnClickListener(onClickListener);
         }
     }
 
