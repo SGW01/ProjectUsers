@@ -1,13 +1,15 @@
 package sgw.projectusers.view.ui.activities;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -48,6 +50,9 @@ public class MainActivity extends BaseActivity  {
     RecyclerView recyclerView;
     @BindView(R.id.loadUser)
     ProgressBar loadUser;
+    @BindView(R.id.iv_user_icon)
+    ImageView imageViewUserIcon;
+
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<User> usersList;
@@ -146,8 +151,31 @@ public class MainActivity extends BaseActivity  {
         super.onDestroy();
         compositeDisposable.dispose();
     }
+    private void showDialog() {
+        int width = imageViewUserIcon.getWidth()*4;
+        int height = imageViewUserIcon.getHeight()*4;
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(width,height);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        View linearlayout = getLayoutInflater().inflate(R.layout.dialog, null);
+        alertDialog.setView(linearlayout);
+
+        final ImageView imageViewBiggerIcon = (ImageView) linearlayout.findViewById(R.id.iv_bigger_icon);
+        imageViewBiggerIcon.setImageDrawable(imageViewUserIcon.getDrawable());
+        imageViewBiggerIcon.setLayoutParams(layoutParams);
+        alertDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        alertDialog.create();
+        alertDialog.show();
+    }
     public void showBiggerImage(){
         Toast.makeText(this,"UserClickListener",Toast.LENGTH_SHORT).show();
+        showDialog();
     }
 
     public class UserClickListener implements View.OnClickListener {
