@@ -1,6 +1,5 @@
 package sgw.projectusers.view.ui.activities;
 
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -164,11 +163,7 @@ public class MainActivity extends BaseActivity  {
         imageViewBiggerIcon.setImageDrawable(imageViewUserIcon.getDrawable());
         imageViewBiggerIcon.setLayoutParams(layoutParams);
         alertDialog.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                (dialog, id) -> dialog.cancel());
 
         alertDialog.create();
         alertDialog.show();
