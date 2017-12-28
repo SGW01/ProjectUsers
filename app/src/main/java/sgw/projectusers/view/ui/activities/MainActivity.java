@@ -1,5 +1,6 @@
 package sgw.projectusers.view.ui.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.reactivestreams.Publisher;
 
@@ -52,6 +54,8 @@ public class MainActivity extends BaseActivity  {
     private RecyclerAdapter mAdapter;
     private PublishProcessor<Integer> pagination;
     private CompositeDisposable compositeDisposable;
+
+    private Bitmap bitmap;
 
     @Inject
     RestAPI restAPI;
@@ -142,12 +146,16 @@ public class MainActivity extends BaseActivity  {
         super.onDestroy();
         compositeDisposable.dispose();
     }
+    public void showBiggerImage(){
+        Toast.makeText(this,"UserClickListener",Toast.LENGTH_SHORT).show();
+    }
 
     public class UserClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
 
+            showBiggerImage();
         }
     }
 
