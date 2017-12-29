@@ -1,7 +1,7 @@
 package sgw.projectusers.view.ui.adapters;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,10 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,20 +21,22 @@ import sgw.projectusers.R;
 import sgw.projectusers.model.entities.User;
 
 
-
-
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<User> users;
     Context context;
-    private final View.OnClickListener mOnClickListener;
+  //  private final View.OnClickListener mOnClickListener;
+
+    public Bitmap bitmap;
+    private RecyclerViewClickListener listener;
 
 
-    public RecyclerAdapter(View.OnClickListener onClickListener, ArrayList<User> users, Context context) {
+    public RecyclerAdapter(RecyclerViewClickListener listener, ArrayList<User> users, Context context) {
 
-        mOnClickListener=onClickListener;
+     //   mOnClickListener=onClickListener;
         this.users = users;
         this.context = context;
+        this.listener = listener;
     }
 
 
@@ -48,7 +47,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
             View view = inflater.inflate(R.layout.item_user, parent, false);
-            viewHolder = new UserViewHolder(view);
+            viewHolder = new UserViewHolder(view,listener);
 
             return viewHolder;
         }
@@ -60,12 +59,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         User user = users.get(position);
         userViewHolder.userName.setText(user.getLogin());
         userViewHolder.loginId.setText(String.valueOf(user.getUrl()));
-        userViewHolder.setAvatarOnClickListener(mOnClickListener);
+      //  userViewHolder.setAvatarOnClickListener(mOnClickListener);
+
         if (!TextUtils.isEmpty(user.getAvatar_url())) {
             Glide.with(context)
                     .load(user.getAvatar_url())
                     .into(userViewHolder.avatar);
         }
+
     }
 
 
@@ -98,15 +99,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.iv_user_icon)
         ImageView avatar;
 
-        public UserViewHolder(View itemView) {
+        public UserViewHolder(View itemView,final RecyclerViewClickListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null)
+                        listener.onViewClicked(v, getAdapterPosition());
+                }
+            });
         }
 
         public void setAvatarOnClickListener(View.OnClickListener onClickListener)
         {
             avatar.setOnClickListener(onClickListener);
+
+
         }
+
+
+
     }
 
 }

@@ -1,6 +1,5 @@
 package sgw.projectusers.view.ui.activities;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.reactivestreams.Publisher;
 
@@ -39,9 +40,10 @@ import sgw.projectusers.model.entities.User;
 import sgw.projectusers.model.rest.RestAPI;
 import sgw.projectusers.view.ui.UserPagination;
 import sgw.projectusers.view.ui.adapters.RecyclerAdapter;
+import sgw.projectusers.view.ui.adapters.RecyclerViewClickListener;
 
 
-public class MainActivity extends BaseActivity  {
+public class MainActivity extends BaseActivity  implements RecyclerViewClickListener{
 
 
     public boolean requestOnWay = false;
@@ -49,8 +51,7 @@ public class MainActivity extends BaseActivity  {
     RecyclerView recyclerView;
     @BindView(R.id.loadUser)
     ProgressBar loadUser;
-    @BindView(R.id.iv_user_icon)
-    ImageView imageViewUserIcon;
+
 
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -59,7 +60,6 @@ public class MainActivity extends BaseActivity  {
     private PublishProcessor<Integer> pagination;
     private CompositeDisposable compositeDisposable;
 
-    private Bitmap bitmap;
 
     @Inject
     RestAPI restAPI;
@@ -84,7 +84,15 @@ public class MainActivity extends BaseActivity  {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         usersList = new ArrayList<>();
-        mAdapter = new RecyclerAdapter(new UserClickListener(),usersList,this);
+        mAdapter = new RecyclerAdapter(new RecyclerViewClickListener() {
+            @Override
+            public void onViewClicked(View v, int position) {
+                if(v.getId() == R.id.iv_user_icon){
+                showDialog(usersList.get(position).getAvatar_url());
+
+                }
+            }
+        }, usersList, this);
         recyclerView.setAdapter(mAdapter);
 
         final LinearLayoutManager layoutManager = (LinearLayoutManager) mLayoutManager;
@@ -150,36 +158,33 @@ public class MainActivity extends BaseActivity  {
         super.onDestroy();
         compositeDisposable.dispose();
     }
-    private void showDialog() {
-        int width = imageViewUserIcon.getWidth()*4;
-        int height = imageViewUserIcon.getHeight()*4;
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(width,height);
+   private void showDialog(String bitmap) {
+       Toast.makeText(this,String.valueOf(bitmap),Toast.LENGTH_LONG).show();
+
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         View linearlayout = getLayoutInflater().inflate(R.layout.dialog, null);
         alertDialog.setView(linearlayout);
 
         final ImageView imageViewBiggerIcon = (ImageView) linearlayout.findViewById(R.id.iv_bigger_icon);
-        imageViewBiggerIcon.setImageDrawable(imageViewUserIcon.getDrawable());
-        imageViewBiggerIcon.setLayoutParams(layoutParams);
+       Glide.with(this)
+               .load(bitmap)
+               .into(imageViewBiggerIcon);
         alertDialog.setNegativeButton("Cancel",
                 (dialog, id) -> dialog.cancel());
 
         alertDialog.create();
         alertDialog.show();
     }
-    public void showBiggerImage(){
-        Toast.makeText(this,"UserClickListener",Toast.LENGTH_SHORT).show();
-        showDialog();
+  public void showBiggerImage(){
+        Toast.makeText(this, "showBiggerImage"  ,Toast.LENGTH_SHORT).show();
+
     }
 
-    public class UserClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-
-            showBiggerImage();
-        }
+    @Override
+    public void onViewClicked(View v, int position) {
+        showBiggerImage();
     }
+
 
 }
